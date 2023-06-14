@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <style>
+      @keyframes fireworks {
+        0% {
+          background-color: red;
+        }
+        25% {
+          background-color: yellow;
+        }
+        50% {
+          background-color: blue;
+        }
+        75% {
+          background-color: green;
+        }
+        100% {
+          background-color: purple;
+        }
+      }
+
+      .firework {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        animation-name: fireworks;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="a">Hello</h1>
+    <script>
+      if (
+        navigator.userAgent.includes('Mozilla/5.0 (') &&
+        (navigator.userAgent.includes(' OculusBrowser/') ||
+          navigator.userAgent.includes(' Valve SteamVR/'))
+      ) {
+        // Пользователь зашел через VR-очки
+        // alert('Пользователь использует VR-очки');
+        setInterval(createFirework, 100);
+      } else {
+        // Пользователь не использует VR-очки или информация не доступна
+        // alert('Пользователь не использует VR-очки');
+      }
+
+      if ('xr' in navigator) {
+        // Пользовательский браузер поддерживает WebXR
+
+        navigator.xr
+          .isSessionSupported('immersive-vr')
+          .then(function (supported) {
+            if (supported) {
+              // WebXR поддерживается
+
+              // Проверяем, активирована ли в данный момент сессия VR
+              navigator.xr.isSessionActive().then(function (active) {
+                if (active) {
+                  // Пользователь смотрит VR-содержимое
+                  // alert('Пользователь смотрит VR-содержимое.');
+                } else {
+                  // Пользователь не смотрит VR-содержимое
+                  // alert('Пользователь не смотрит VR-содержимое.');
+                }
+              });
+            } else {
+              // WebXR не поддерживается
+              // alert('WebXR не поддерживается в этом браузере.');
+            }
+          });
+      } else {
+        // Пользовательский браузер не поддерживает WebXR
+        // alert('WebXR не поддерживается в этом браузере.');
+      }
+
+      // Проверка наличия события DeviceOrientation
+      if ('DeviceOrientationEvent' in window) {
+        // Поддерживается событие DeviceOrientation
+
+        // Обработчик события DeviceOrientation
+        function handleOrientation(event) {
+          // Проверка значений альфа и бета (положение устройства)
+          if (event.alpha !== null && event.beta !== null) {
+            // Пользователь использует VR-шлем
+            alert('Пользователь использует VR-шлем');
+          } else {
+            // VR-шлем не обнаружен
+            alert('VR-шлем не обнаружен');
+          }
+        }
+
+        // Добавление обработчика события DeviceOrientation
+        window.addEventListener(
+          'deviceorientation',
+          handleOrientation,
+        );
+      } else {
+        // Событие DeviceOrientation не поддерживается
+        alert('Событие DeviceOrientation не поддерживается');
+      }
+
+      function createFirework() {
+        var firework = document.createElement('div');
+        firework.className = 'firework';
+        firework.style.left = Math.random() * 100 + '%';
+        firework.style.top = Math.random() * 100 + '%';
+        document.body.appendChild(firework);
+        document.getElementById('a').innerText =
+          'Ура, пользователь зашел через VR очки :)';
+      }
+    </script>
+  </body>
+</html>
